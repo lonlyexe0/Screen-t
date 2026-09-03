@@ -1,0 +1,37 @@
+# Root FFmpeg binaries (>100MB, cannot be committed to GitHub)
+/bin/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.pdb
+*.log
+
+# Except keep the precompiled standalone publish output for direct usage (without logs and debug pdbs)
+!/IkinciEkran/publish/
+/IkinciEkran/publish/*.log
+/IkinciEkran/publish/*.pdb
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+venv/
+ENV/
+
+# Visual Studio & VS Code
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Windows thumbnail caches
+Thumbs.db
+ehthumbs.db
+Desktop.ini

@@ -1,0 +1,246 @@
+<Window x:Class="IkinciEkran.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="İkinci Ekran - Sanal Monitör Yayın Sunucusu"
+        Height="780" Width="680"
+        MinHeight="720" MinWidth="640"
+        WindowStartupLocation="CenterScreen"
+        Background="#0F172A"
+        Foreground="#F8FAFC"
+        FontFamily="Segoe UI, Roboto, Arial"
+        Icon="Assets/app.ico">
+
+    <Window.Resources>
+        <!-- Modern Card Style -->
+        <Style x:Key="CardPanel" TargetType="Border">
+            <Setter Property="Background" Value="#1E293B" />
+            <Setter Property="BorderBrush" Value="#334155" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="0,0,0,14" />
+        </Style>
+
+        <!-- Modern Action Button -->
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#0284C7" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0EA5E9" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0369A1" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Secondary Slate Button -->
+        <Style x:Key="SecondaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#334155" />
+            <Setter Property="Foreground" Value="#E2E8F0" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#475569" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1E293B" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Dark CheckBox Style -->
+        <Style x:Key="ModernCheckBox" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#CBD5E1" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Margin" Value="0,4,0,4" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <!-- Header -->
+            <RowDefinition Height="Auto" />
+            <!-- Content -->
+            <RowDefinition Height="*" />
+            <!-- Footer -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="🖥️" FontSize="26" Margin="0,0,10,0" VerticalAlignment="Center" />
+                    <TextBlock Text="İkinci Ekran" FontSize="24" FontWeight="Bold" Foreground="#38BDF8" VerticalAlignment="Center" />
+                    <Border Background="#0369A1" CornerRadius="4" Margin="10,0,0,0" Padding="6,2" VerticalAlignment="Center">
+                        <TextBlock Text="v1.0" FontSize="11" FontWeight="Bold" Foreground="#E0F2FE" />
+                    </Border>
+                </StackPanel>
+                <TextBlock Text="Sanal Monitör ve HTTP Yerel Ağ Ekran Yayın Sunucusu" FontSize="13" Foreground="#94A3B8" Margin="0,4,0,0" />
+            </StackPanel>
+
+            <!-- Header Quick Action -->
+            <Button Grid.Column="1" Content="⬇ Tepsiye Küçült" Style="{StaticResource SecondaryButton}" Click="BtnMinimizeToTray_Click" VerticalAlignment="Top" />
+        </Grid>
+
+        <!-- CONTENT SCROLLVIEW -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Orientation="Vertical">
+
+                <!-- 1. LIVE STATUS & URL CARD -->
+                <Border Style="{StaticResource CardPanel}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Status Badge & Indicator -->
+                        <DockPanel Grid.Row="0" LastChildFill="False">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Ellipse x:Name="IndicatorCircle" Width="12" Height="12" Fill="#EF4444" Margin="0,0,8,0" />
+                                <TextBlock x:Name="TxtStatus" Text="DURDURULDU" FontWeight="Bold" FontSize="14" Foreground="#EF4444" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <TextBlock x:Name="TxtFps" DockPanel.Dock="Right" Text="60 FPS | Sıfır Gecikme" FontSize="12" Foreground="#94A3B8" VerticalAlignment="Center" />
+                        </DockPanel>
+
+                        <!-- URL Box -->
+                        <Border Grid.Row="1" Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,12,0,10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="Yayın Bağlantı Adresi:" FontSize="11" Foreground="#64748B" />
+                                    <TextBox x:Name="TxtStreamUrl" Text="http://127.0.0.1:8080" IsReadOnly="True" BorderThickness="0" Background="Transparent" Foreground="#38BDF8" FontSize="15" FontWeight="Bold" Margin="0,2,0,0" />
+                                </StackPanel>
+
+                                <Button Grid.Column="1" x:Name="BtnCopyUrl" Content="📋 Kopyala" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="BtnCopyUrl_Click" />
+                                <Button Grid.Column="2" Content="🌐 Tarayıcıda Aç" Style="{StaticResource SecondaryButton}" Margin="6,0,0,0" Click="BtnOpenBrowser_Click" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Key Hardware Info Badges -->
+                        <UniformGrid Grid.Row="2" Columns="2" Margin="0,2,0,0">
+                            <Border Background="#0F172A" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                                <StackPanel>
+                                    <TextBlock Text="Sanal 2. Ekran Durumu" FontSize="11" Foreground="#94A3B8" />
+                                    <TextBlock x:Name="TxtVirtualScreenStatus" Text="Devre Dışı" FontWeight="SemiBold" FontSize="13" Foreground="#F87171" Margin="0,2,0,0" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Background="#0F172A" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="Bağlı İstemci Sayısı" FontSize="11" Foreground="#94A3B8" />
+                                    <TextBlock x:Name="TxtConnectedClients" Text="0 Cihaz (Bekleniyor)" FontWeight="SemiBold" FontSize="13" Foreground="#38BDF8" Margin="0,2,0,0" />
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+                    </Grid>
+                </Border>
+
+                <!-- 2. MAIN CONTROLS -->
+                <Grid Margin="0,0,0,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="BtnToggleStream" Content="▶  YAYINI BAŞLAT" Height="50" FontSize="16" FontWeight="Bold" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Click="BtnToggleStream_Click" />
+                    <Button Grid.Column="1" x:Name="BtnToggleDisplay" Content="🖥️ Sanal Ekranı Aç" Height="50" FontSize="13" FontWeight="SemiBold" Style="{StaticResource SecondaryButton}" Click="BtnToggleDisplay_Click" />
+                </Grid>
+
+                <!-- 3. LINUX CLIENT INSTRUCTIONS -->
+                <Border Style="{StaticResource CardPanel}">
+                    <StackPanel>
+                        <TextBlock Text="🐧 Linux İstemcisi Hızlı Bağlantı" FontSize="14" FontWeight="SemiBold" Foreground="#F8FAFC" />
+                        <TextBlock Text="Linux bilgisayarınızda aşağıdaki komutu çalıştırarak doğrudan tam ekran izleyebilirsiniz:" FontSize="12" Foreground="#94A3B8" Margin="0,4,0,8" />
+
+                        <Border Background="#0B0F19" BorderBrush="#1E293B" BorderThickness="1" CornerRadius="6" Padding="10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="TxtLinuxCmd" Text="python3 client.py http://127.0.0.1:8080" IsReadOnly="True" Background="Transparent" Foreground="#A7F3D0" FontFamily="Consolas, monospace" FontSize="12" BorderThickness="0" VerticalAlignment="Center" />
+                                <Button Grid.Column="1" x:Name="BtnCopyLinuxCmd" Content="📋 Komutu Kopyala" Style="{StaticResource SecondaryButton}" Margin="8,0,0,0" Click="BtnCopyLinuxCmd_Click" />
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- 4. AUTOMATION & WINDOWS INTEGRATION SETTINGS -->
+                <Border Style="{StaticResource CardPanel}">
+                    <StackPanel>
+                        <TextBlock Text="⚙️ Otomasyon ve Windows Entegrasyonu" FontSize="14" FontWeight="SemiBold" Foreground="#F8FAFC" Margin="0,0,0,10" />
+
+                        <CheckBox x:Name="ChkAutoEnableDisplay" Content="Yayın başlatıldığında sanal 2. ekranı otomatik aç" IsChecked="True" Style="{StaticResource ModernCheckBox}" />
+                        <CheckBox x:Name="ChkAutoDisableDisplay" Content="Yayın durduğunda veya programdan çıkıldığında sanal ekranı otomatik kapat" IsChecked="True" Style="{StaticResource ModernCheckBox}" />
+                        <CheckBox x:Name="ChkMinimizeToTrayOnClose" Content="Pencere (X) kapatıldığında saatin yanında (tepside) çalışmaya devam et" IsChecked="True" Style="{StaticResource ModernCheckBox}" />
+                        <CheckBox x:Name="ChkRunOnStartup" Content="Windows açılışında otomatik başlat" IsChecked="False" Style="{StaticResource ModernCheckBox}" Click="ChkRunOnStartup_Click" />
+
+                        <Separator Background="#334155" Margin="0,10,0,10" />
+
+                        <UniformGrid Columns="2">
+                            <Button Content="🔍 Windows Aramasına Ekle (Başlat Menüsü)" Style="{StaticResource SecondaryButton}" Margin="0,0,4,0" Click="BtnRegisterStartMenu_Click" />
+                            <Button Content="📌 Masaüstüne Kısayol Ekle" Style="{StaticResource SecondaryButton}" Margin="4,0,0,0" Click="BtnRegisterDesktop_Click" />
+                        </UniformGrid>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- FOOTER -->
+        <Border Grid.Row="2" BorderBrush="#334155" BorderThickness="0,1,0,0" Padding="0,12,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="TxtLog" Text="Hazır. 'Yayını Başlat' düğmesine basarak başlayabilirsiniz." FontSize="12" Foreground="#94A3B8" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                <Button Grid.Column="1" Content="❌ Tamamen Çıkış" Style="{StaticResource SecondaryButton}" Background="#451A1A" Foreground="#FCA5A5" Click="BtnExitApp_Click" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
